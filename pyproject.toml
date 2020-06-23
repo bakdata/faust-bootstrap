@@ -7,7 +7,7 @@ build-backend = "flit.buildapi"
 module = "faust_bootstrap"
 dist-name = "faust-bootstrap"
 author = "bakdata"
-home-page = "https://gitlab.bayer.com/sih/kafka-processing/faust-bootstrap"
+home-page = "https://github.com/bakdata/faust-bootstrap"
 description-file="README.md"
 requires-python = ">=3.6"
 requires = [

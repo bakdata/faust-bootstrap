@@ -35,7 +35,7 @@ class FaustApplication(ABC):
     app: faust.App
 
     def __init__(self):
-        self.__to_discover_paths = []
+        self.__paths_to_discover = []
         self.__monkey_patch_record()
         self._cli = FaustCli()
 
@@ -48,10 +48,10 @@ class FaustApplication(ABC):
     def _register_parameters(self):
         ...
 
-    def add_discover_path(self, path):
-        self.__to_discover_paths.append(path)
+    def discover_in_path(self, path):
+        self.__paths_to_discover.append(path)
 
-    def __discover_path(cls, path):
+    def __discover_in_paths(cls, path):
         modules = pkgutil.walk_packages(path=[path])
         for module in modules:
             logging.debug(f"Importing path {path}")
@@ -82,8 +82,8 @@ class FaustApplication(ABC):
         self.__load_dependencies_to_discover()
 
     def __load_dependencies_to_discover(self):
-        for path in self.__to_discover_paths:
-            self.__discover_path(path)
+        for path in self.__paths_to_discover:
+            self.__discover_in_paths(path)
 
     @abstractmethod
     def get_unique_app_id(self):
@@ -148,16 +148,16 @@ class FaustApplication(ABC):
     def __verify_topology(self):
         for input_topic in self.input_topic_names:
 
-            input_topic_exist = exist_topic(self.brokers, input_topic)
+            input_topic_exists = exist_topic(self.brokers, input_topic)
 
-            if not input_topic_exist:
+            if not input_topic_exists:
                 raise ValueError(f"The input topic {input_topic} doesn't exist")
-        output_topic_exist = exist_topic(self.brokers, self.output_topic_name)
-        if not output_topic_exist:
+        output_topic_exists = exist_topic(self.brokers, self.output_topic_name)
+        if not output_topic_exists:
             raise ValueError(f"The output topic {self.output_topic_name} doesn't exist")
         if self.error_topic_name:
-            error_topic_exist = exist_topic(self.brokers, self.output_topic_name)
-            if not error_topic_exist:
+            error_topic_exists = exist_topic(self.brokers, self.output_topic_name)
+            if not error_topic_exists:
                 raise ValueError(f"The error topic {self.error_topic_name} doesn't exist")
 
     def __clean_and_exit(self):

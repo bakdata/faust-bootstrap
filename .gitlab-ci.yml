@@ -1,8 +1,0 @@
-include:
-  - project: 'sih/kafka-ci-tooling/processing-ci-template'
-    file: 'library-python.gitlab-ci.yml'
-
-variables:
-  GIT_SUBMODULE_STRATEGY: recursive
-  PROJECT_NAME: "faust-bootstrap"
-

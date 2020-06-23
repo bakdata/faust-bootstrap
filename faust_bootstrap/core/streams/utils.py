@@ -139,9 +139,6 @@ def get_streams_config(prefix: str, env: dict):
 
 
 def records_to_dict(record):
-    # This function is a workaround. It should be removed in the future
-    # see https://gitlab.bayer.com/sih/kafka-processing/kafka-nlp/issues/7 for more information
-
     if isinstance(record, Record):
         for key in vars(record).keys():
             value = getattr(record, key)
