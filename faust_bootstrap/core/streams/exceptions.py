@@ -1,0 +1,2 @@
+class FaustAppCleanException(Exception):
+    pass
