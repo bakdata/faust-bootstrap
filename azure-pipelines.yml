@@ -1,0 +1,29 @@
+jobs:
+- job: 'Test'
+  pool:
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+      Python38:
+        python.version: '3.8'
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+
+  - script: pip install flit
+    displayName: 'Install flit build tool'
+
+  - script: flit install --symlink
+    displayName: 'Install library and its dependencies'
+
+  - script: pytest tests/unit
+    displayName: 'Run Unit-Testing'
+
+  - script: pytest tests/integration
+    displayName: 'Run Integration-Testing'
