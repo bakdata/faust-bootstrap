@@ -10,3 +10,6 @@ You can install faust-bootstrap from pypi.
 
 ``pip install faust-bootstrap``
 
+### Example
+
+[Here](https://github.com/bakdata/common-kafka-streams-demo) can you get an use case example of both libraries.
