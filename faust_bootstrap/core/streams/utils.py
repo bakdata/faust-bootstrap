@@ -143,7 +143,7 @@ def records_to_dict(record):
         for key in vars(record).keys():
             value = getattr(record, key)
             if isinstance(value, Record):
-                setattr(record, value.asdict())
+                setattr(record, records_to_dict(value.asdict()))
             if isinstance(value, list):
                 records_to_dict(value)
             if isinstance(value, dict):
@@ -153,7 +153,7 @@ def records_to_dict(record):
         for key in record.keys():
             value = record[key]
             if isinstance(value, Record):
-                record[key] = value.asdict()
+                record[key] = records_to_dict(value.asdict())
             if isinstance(value, list):
                 records_to_dict(value)
             if isinstance(value, dict):
@@ -162,7 +162,7 @@ def records_to_dict(record):
     if isinstance(record, list):
         for index, item in enumerate(record):
             if isinstance(item, Record):
-                record[index] = item.asdict()
+                record[index] = records_to_dict(item.asdict())
             if isinstance(item, list):
                 records_to_dict(item)
             if isinstance(item, dict):
