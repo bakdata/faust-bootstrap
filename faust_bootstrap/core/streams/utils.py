@@ -1,4 +1,6 @@
 import ssl
+from typing import List
+
 import certifi
 import faust
 from faust import Record
@@ -80,10 +82,14 @@ def should_use(flag: str):
     return flag == "true"
 
 
-def build_admin_client(brokers: str) -> AdminClient:
-    brokers = brokers.split("kafka://")[1]
-    client = AdminClient({"bootstrap.servers": brokers})
+def build_admin_client(brokers: List[str]) -> AdminClient:
+    brokers_kafka_format = parse_brokers_from_kafka_format(brokers)
+    client = AdminClient({"bootstrap.servers": ",".join(brokers_kafka_format)})
     return client
+
+
+def parse_brokers_from_kafka_format(brokers_kafka: List[str]) -> List[str]:
+    return [broker.split("kafka://")[1] for broker in brokers_kafka]
 
 
 def clean_tables_from_app(app: faust.App):
@@ -91,12 +97,12 @@ def clean_tables_from_app(app: faust.App):
         table.reset_state()
 
 
-def exist_topic(brokers: str, topic: str):
+def exist_topic(brokers: List[str], topic: str):
     client_admin = build_admin_client(brokers)
     try:
         cluster_metadata = client_admin.list_topics(timeout=20)
     except Exception as e:
-        raise ConnectionError("Connection with brokers timed out :", e)
+        raise ConnectionError("Connection with brokers timed out :", e) from e
     if topic in cluster_metadata.topics:
         return True
 

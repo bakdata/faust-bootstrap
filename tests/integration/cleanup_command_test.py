@@ -57,7 +57,7 @@ def test_command_cleanup(cluster_metadata, schema_registry_url, monkeypatch, app
     output_topic_name = "dummy-topic-output"
     amount_of_messages = 5
     group_id = "dummy-group"
-    brokers = f"kafka://{cluster_metadata['kafka']['host']}:{cluster_metadata['kafka']['port']}"
+    brokers = [f"kafka://{cluster_metadata['kafka']['host']}:{cluster_metadata['kafka']['port']}"]
 
     set_environment_test(brokers, group_id, input_topic_name, monkeypatch, output_topic_name, schema_registry_url)
 
@@ -83,7 +83,7 @@ def test_command_cleanup_with_output_topic_delete(cluster_metadata, client_schem
     output_topic_name = "dummy-topic-output"
     key_subject = f"{output_topic_name}-key"
     value_subject = f"{output_topic_name}-value"
-    brokers = f"kafka://{cluster_metadata['kafka']['host']}:{cluster_metadata['kafka']['port']}"
+    brokers = [f"kafka://{cluster_metadata['kafka']['host']}:{cluster_metadata['kafka']['port']}"]
     amount_of_messages = 5
     group_id = "dummy-group"
     client_admin = create_admin_client_from_metadata(cluster_metadata)
@@ -120,7 +120,7 @@ def test_command_cleanup_with_output_topic_delete(cluster_metadata, client_schem
 
 def set_environment_test(brokers, group_id, input_topic_name, monkeypatch, output_topic_name, schema_registry_url,
                          delete_output="false", error_topic=None):
-    monkeypatch.setenv("APP_BROKERS", brokers)
+    monkeypatch.setenv("APP_BROKERS", ",".join(brokers))
     monkeypatch.setenv("APP_INPUT_TOPICS", input_topic_name)
     monkeypatch.setenv("APP_OUTPUT_TOPIC", output_topic_name)
     monkeypatch.setenv("APP_NAME", group_id)
@@ -152,7 +152,7 @@ def test_command_cleanup_with_error_topic_delete(cluster_metadata, client_schema
     assert error_value_subject in subjects
 
     group_id = "dummy-group"
-    brokers = f"kafka://{cluster_metadata['kafka']['host']}:{cluster_metadata['kafka']['port']}"
+    brokers = [f"kafka://{cluster_metadata['kafka']['host']}:{cluster_metadata['kafka']['port']}"]
     client_admin = create_admin_client_from_metadata(cluster_metadata)
 
     set_environment_test(brokers, group_id, input_topic_name, monkeypatch, output_topic_name, schema_registry_url,
@@ -181,7 +181,7 @@ def test_command_no_exist_topic(cluster_metadata, schema_registry_url, monkeypat
     output_topic_name = "output-non-existant-topic"
     error_topic_name = "dummy-topic-error"
     group_id = "dummy-group"
-    brokers = f"kafka://{cluster_metadata['kafka']['host']}:{cluster_metadata['kafka']['port']}"
+    brokers = [f"kafka://{cluster_metadata['kafka']['host']}:{cluster_metadata['kafka']['port']}"]
     set_environment_test(brokers, group_id, input_topic_name, monkeypatch, output_topic_name, schema_registry_url,
                          "true",
                          error_topic_name)
