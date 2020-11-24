@@ -30,6 +30,7 @@ class FaustCli:
         properties["input_topic_names"] = properties["input_topics"].split(",")
         properties["output_topic_name"] = properties["output_topic"]
         properties["error_topic_name"] = properties["error_topic"]
+        properties["brokers"] = properties["brokers"].split(",")
         del properties["input_topics"]
         del properties["output_topic"]
         del properties["error_topic"]

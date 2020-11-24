@@ -1,26 +1,28 @@
+from typing import List
+
 from faust import App
 from confluent_kafka.admin import AdminClient
 from confluent_kafka.cimpl import TopicPartition, Consumer
 from schema_registry.client import SchemaRegistryClient
 
-from faust_bootstrap.core.streams.utils import exist_topic
+from faust_bootstrap.core.streams.utils import exist_topic, parse_brokers_from_kafka_format
 from .exceptions import FaustAppCleanException
 from .utils import clean_tables_from_app, build_admin_client, \
     build_schema_registry_client
 
 
-def clean_up_command(app: App, brokers: str, input_topic: str, output_topic: str, app_name: str,
+def clean_up_command(app: App, brokers: List[str], input_topic: str, output_topic: str, app_name: str,
                      schema_registry_url: str, error_topic: str = None, schema_registry_config: dict = None,
                      delete_output_topic: bool = False):
     schema_registry = build_schema_registry_client(schema_registry_url, schema_registry_config)
     clean_tables_from_app(app)
     client = build_admin_client(brokers)
-    brokers_endpoint = brokers.split("kafka://")[1]
+    brokers_endpoint = parse_brokers_from_kafka_format(brokers)
 
     input_topic_exist = exist_topic(brokers, input_topic)
 
     if input_topic_exist:
-        reset_offsets_from_partitions(client, brokers_endpoint, app_name, input_topic)
+        reset_offsets_from_partitions(client, ",".join(brokers_endpoint), app_name, input_topic)
 
     if delete_output_topic:
 
