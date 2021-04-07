@@ -11,8 +11,8 @@ home-page = "https://github.com/bakdata/faust-bootstrap"
 description-file="README.md"
 requires-python = ">=3.6"
 requires = [
-    "python-schema-registry-client==1.2.4",
-    "faust",
+    "python-schema-registry-client==1.8.1",
+    "faust-streaming",
     "confluent-kafka",
     "typing-extensions==3.7.4",
     "faust-avro-serializer",
