@@ -40,7 +40,7 @@ class FaustApplication(ABC):
         self._cli = FaustCli()
 
     def create_agent(self, agent_function: AgentFun[Callable], channel: Union[str, ChannelT] = None, **kwargs):
-        self.app.agent(channel, **kwargs)(agent_function)
+        return self.app.agent(channel, **kwargs)(agent_function)
 
     def register_parameter(self, name: str, required: bool, help: str, type: Any, **kwargs):
         self._cli.add_option(name, required, help, type, **kwargs)
